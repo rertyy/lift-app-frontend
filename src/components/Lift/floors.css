@@ -1,0 +1,10 @@
+.list-up { 
+  display: flex;
+  flex-direction: column-reverse;
+  list-style: none;
+}
+
+/* li {
+  flex: 0 0 auto;
+} */
+
