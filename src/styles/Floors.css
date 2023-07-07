@@ -1,0 +1,9 @@
+.list-up {
+    display: flex;
+    flex-direction: column-reverse;
+    list-style: none;
+}
+
+.lift-button:hover {
+    color: #747bff;
+}

@@ -1,19 +1,16 @@
-import PropTypes from "prop-types";
+import LiftButton from "./LiftButton.tsx";
 import { useEffect, useState } from "react";
-import LiftButton from "./LiftButton";
-import Checkbox from "@mui/material/Checkbox";
 import { Link } from "react-router-dom";
-import { FormControlLabel } from "@mui/material";
-import "./floors.css";
+import { Checkbox, FormControlLabel } from "@mui/material";
+import "../styles/Floors.css";
 
-// currently pressed floors
-// buttons to press all floors
+export default function Floors({ length = 10 }) {
+  function handleClick(floorNum: number) {
+    console.log(`You clicked floor ${floorNum}`);
 
-function Floors({ length = 10 }) {
-  function handleClick(floorNum) {
     if (remove) {
       setRemaining((remaining) =>
-        remaining.filter((floor) => floor !== floorNum)
+        remaining.filter((floor) => floor !== floorNum),
       );
     } else {
       setRemaining((remaining) => [...remaining, floorNum]);
@@ -26,15 +23,15 @@ function Floors({ length = 10 }) {
     setLastPressed(null);
   }
 
-  const floorsList = Array.from({ length: length }, (v, k) => k + 1);
+  const floorsList = Array.from({ length: length }, (_, k) => k + 1);
   const buttons = floorsList.map((floor) => (
     <LiftButton key={floor} handleClick={handleClick} floorNum={floor} />
   ));
-  const [remaining, setRemaining] = useState([]);
-  const [lastPressed, setLastPressed] = useState(null);
+
+  const [remaining, setRemaining] = useState<number[]>([]);
+  const [lastPressed, setLastPressed] = useState<number | null>(null);
   const [remove, setRemove] = useState(false);
   const [currentFloor, setCurrentFloor] = useState(1);
-
   useEffect(() => {
     if (remaining.length > 0) {
       const last = remaining[remaining.length - 1];
@@ -85,9 +82,3 @@ function Floors({ length = 10 }) {
     </>
   );
 }
-
-Floors.propTypes = {
-  length: PropTypes.number,
-};
-
-export default Floors;
