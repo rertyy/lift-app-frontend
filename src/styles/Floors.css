@@ -7,3 +7,14 @@
 .lift-button:hover {
     color: #747bff;
 }
+
+.lift-button-selected {
+    color: darkorange;
+    outline: white;
+
+}
+
+.lift-button-selected:hover {
+    color: red;
+    outline: white;
+}

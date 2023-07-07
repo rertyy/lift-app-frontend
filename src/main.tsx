@@ -7,6 +7,7 @@ import Welcome from "./components/Welcome.tsx";
 import Root from "./Root.tsx";
 import App from "./components/App.tsx";
 import Floors from "./components/Floors.tsx";
+import WebSockFloors from "./components/WebSocketFloors.tsx";
 
 const router = createBrowserRouter([
   {
@@ -28,11 +29,11 @@ const router = createBrowserRouter([
         element: <Floors />,
         errorElement: <ErrorPage />,
       },
-      // {
-      //     path: "/test",
-      //     element: <Test />,
-      //     errorElement: <ErrorPage />,
-      // },
+      {
+        path: "/websocket",
+        element: <WebSockFloors />,
+        errorElement: <ErrorPage />,
+      },
     ],
   },
 ]);

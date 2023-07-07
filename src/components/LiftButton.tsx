@@ -1,12 +1,21 @@
+import "../styles/Floors.css";
+
 type LiftButtonProps = {
   floorNum: number;
   handleClick: (floorNum: number) => void;
+  selected: boolean;
 };
 
-export default function LiftButton({ floorNum, handleClick }: LiftButtonProps) {
+export default function LiftButton({
+  floorNum,
+  handleClick,
+  selected,
+}: LiftButtonProps) {
+  const styles = selected ? "lift-button-selected" : "lift-button";
+
   return (
     <li>
-      <button className="lift-button" onClick={() => handleClick(floorNum)}>
+      <button className={styles} onClick={() => handleClick(floorNum)}>
         {floorNum}
       </button>
     </li>
