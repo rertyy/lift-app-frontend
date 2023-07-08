@@ -3,97 +3,81 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Checkbox, FormControlLabel } from "@mui/material";
 import "../styles/Floors.css";
-import { RequestType, sendToServer } from "./WebSocketFunctions.tsx";
-
-import { useWebSocketContext } from "./UseWebSocketContext.tsx";
+import { useWebSocketContext } from "../hooks/useWebSocketContext.ts";
+import { UNPARSABLE_JSON_OBJECT } from "react-use-websocket/dist/lib/constants";
+import { FromServerType } from "./WebSocketFunctions.ts";
+import { useFloors } from "../hooks/useFloors.ts";
 
 type ReceiveJsonMessage = {
-  type: RequestType;
+  type: FromServerType;
   data: number | number[];
 };
 
 export default function Floors({ length = 10 }) {
-  const [selected, setSelected] = useState<Set<number>>(new Set());
-  const [averageTime, setAverageTime] = useState(0);
-  // const [lastPressed, setLastPressed] = useState<number | null>(null);
   const [remove, setRemove] = useState(false);
-  const [currentFloor, setCurrentFloor] = useState(1);
 
-  function handleClick(floorNum: number) {
-    console.log(`You clicked floor ${floorNum}`);
-    if (remove) {
-      sendToServer(sendJsonMessage, RequestType.RemoveFloor, floorNum);
-      // setRemaining((remaining) =>
-      //   remaining.filter((floor) => floor !== floorNum),
-      // );
-    } else {
-      sendToServer(sendJsonMessage, RequestType.AddFloor, floorNum);
-      // setRemaining((remaining) => [...remaining, floorNum]);
-    }
-  }
+  // TODO remove eslint-disable
 
-  function reset() {
-    sendToServer(sendJsonMessage, RequestType.ResetFloors, 0);
-    // TODO reset all floors via broadcast
-    console.log("reset");
-    // setLastPressed(null);
-  }
-
-  function addToSelectedButtons(num: number) {
-    setSelected((selected) => {
-      selected.add(num);
-      console.log(selected);
-      return selected;
-    });
-  }
-
-  function removeFromSelectedButtons(num: number) {
-    setSelected((selected) => {
-      selected.delete(num);
-      console.log(selected);
-      return selected;
-    });
-  }
-
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { sendJsonMessage, lastJsonMessage, readyState } =
     useWebSocketContext();
+
+  const {
+    selected,
+    averageTime,
+    setAverageTimeFunction,
+    handleClickButton,
+    resetPub,
+    resetSub,
+    addToSelectedButtonsSub,
+    removeFromSelectedButtonsSub,
+    currentFloor,
+    setCurrentFloorFunction,
+    // TODO remove eslint-disable
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  } = useFloors(sendJsonMessage);
 
   const floorsList = Array.from({ length: length }, (_, k) => k + 1);
 
   const buttons = floorsList.map((floor) => (
     <LiftButton
       key={floor}
-      handleClick={handleClick}
+      handleClick={() => handleClickButton(floor, remove)}
       selected={selected.has(floor)}
       floorNum={floor}
     />
   ));
 
   useEffect(() => {
-    if (lastJsonMessage) {
+    if (lastJsonMessage && lastJsonMessage != UNPARSABLE_JSON_OBJECT) {
       console.log("lastJsonMessage", lastJsonMessage);
       const { type, data } = lastJsonMessage as ReceiveJsonMessage;
       switch (type) {
-        case RequestType.UpdateLiftRequests:
+        case FromServerType.AddFloor:
+          addToSelectedButtonsSub(data as number);
+          console.log("selected button", data);
+          break;
+        case FromServerType.RemoveFloor:
+          removeFromSelectedButtonsSub(data as number);
+          break;
+        case FromServerType.ResetFloors:
+          resetSub();
+          break;
+        case FromServerType.UpdateCurrentFloor:
+          setCurrentFloorFunction(data as number);
+          break;
+        case FromServerType.UpdateAverageTime:
+          setAverageTimeFunction(data as number);
+          break;
+        case FromServerType.UpdateLiftRequests:
           // TODO
           break;
-        case RequestType.UpdateCurrentFloor:
-          setCurrentFloor(data as number);
-          break;
-        case RequestType.UpdateAverageTime:
-          setAverageTime(data as number);
-          break;
-        case RequestType.SelectButton:
-          addToSelectedButtons(data as number);
-          console.log("selected", data);
-          break;
-        case RequestType.DeselectButton:
-          removeFromSelectedButtons(data as number);
-          break;
+
         default:
           console.log("unknown type", type);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lastJsonMessage]);
 
   return (
@@ -102,7 +86,7 @@ export default function Floors({ length = 10 }) {
       <p>
         <Link to="/">Go back to main page</Link>
       </p>
-      <button onClick={reset}>Reset lift queue</button>
+      <button onClick={resetPub}>Reset lift queue</button>
 
       <br />
 
@@ -126,9 +110,9 @@ export default function Floors({ length = 10 }) {
             Average time per request:{" "}
             {averageTime === 0 ? "No times logged" : averageTime}
           </p>
+          <ul className="list-up">{buttons}</ul>
         </>
       )}
-      <ul className="list-up">{buttons}</ul>
     </>
   );
 }

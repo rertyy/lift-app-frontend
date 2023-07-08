@@ -1,30 +1,37 @@
 import { SendJsonMessage } from "react-use-websocket/dist/lib/types";
 
-export enum RequestType {
+export enum ToServerType {
   AddFloor,
   RemoveFloor,
   ResetFloors,
   UpdateCurrentFloor,
   UpdateAverageTime,
   UpdateLiftRequests,
-  SelectButton,
-  DeselectButton,
 }
 
-type RequestMessage = {
-  type: RequestType;
-  floorNum: number;
+export enum FromServerType {
+  AddFloor = 100,
+  RemoveFloor,
+  ResetFloors,
+  UpdateCurrentFloor,
+  UpdateAverageTime,
+  UpdateLiftRequests,
+}
+
+type ToServerMessage = {
+  type: ToServerType;
+  data: number;
 };
 
 export function sendToServer(
   sendJsonMessage: SendJsonMessage | undefined,
-  requestType: RequestType,
+  requestType: ToServerType,
   floorNum: number,
 ) {
   if (sendJsonMessage) {
-    const message: RequestMessage = {
+    const message: ToServerMessage = {
       type: requestType,
-      floorNum: floorNum,
+      data: floorNum,
     };
     sendJsonMessage(message);
   }
