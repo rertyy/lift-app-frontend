@@ -16,9 +16,7 @@ type ReceiveJsonMessage = {
 export default function Floors({ length = 10 }) {
   const [remove, setRemove] = useState(false);
 
-  // TODO remove eslint-disable
-
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  // TODO error handling
   const { sendJsonMessage, lastJsonMessage, readyState } =
     useWebSocketContext();
 
@@ -33,8 +31,6 @@ export default function Floors({ length = 10 }) {
     removeFromSelectedButtonsSub,
     currentFloor,
     setCurrentFloorFunction,
-    // TODO remove eslint-disable
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   } = useFloors(sendJsonMessage);
 
   const floorsList = Array.from({ length: length }, (_, k) => k + 1);
@@ -77,6 +73,7 @@ export default function Floors({ length = 10 }) {
           console.log("unknown type", type);
       }
     }
+    // disabled because eslint suggested infinite loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lastJsonMessage]);
 

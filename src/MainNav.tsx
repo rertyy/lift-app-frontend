@@ -14,9 +14,6 @@ function MainNav() {
         <li>
           <Link to="/floors">Floors</Link>
         </li>
-        <li>
-          <Link to="/websocket">Websocket</Link>
-        </li>
       </ul>
     </nav>
   );

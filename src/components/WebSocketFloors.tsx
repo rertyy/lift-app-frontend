@@ -2,7 +2,7 @@ import useWebSocket, { ReadyState } from "react-use-websocket";
 import { JsonValue, SendJsonMessage } from "react-use-websocket/dist/lib/types";
 import { createContext } from "react";
 import Floors from "./Floors.tsx";
-import { UNPARSABLE_JSON_OBJECT } from "react-use-websocket/dist/lib/constants";
+import { ServerState } from "./ServerState.tsx";
 
 export type WebSocketData = {
   sendJsonMessage: SendJsonMessage;
@@ -34,17 +34,8 @@ const WebSockFloors = () => {
     <>
       <WebSocketContext.Provider value={webSocketData}>
         <Floors />
-        {/*<button onClick={() => addFloor(sendMessage, 1)}>Add Floor</button>*/}
-        {/*<button onClick={() => removeFloor(sendMessage, 1)}>Remove Floor</button>*/}
+        <ServerState />
       </WebSocketContext.Provider>
-      <div>WebSocket Status: {readyState}</div>
-
-      {lastJsonMessage === UNPARSABLE_JSON_OBJECT && (
-        <div>Last Message: unable to parse last message </div>
-      )}
-      {lastJsonMessage && lastJsonMessage !== UNPARSABLE_JSON_OBJECT && (
-        <div>Last Message From Server: {JSON.stringify(lastJsonMessage)}</div>
-      )}
     </>
   );
 };
