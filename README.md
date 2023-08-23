@@ -1,7 +1,7 @@
 # lift-app-frontend
 
-Frontend [at this link](https://github.com/rertyy/lift-app-frontend/) <br>
-Backend [at this link](https://github.com/rertyy/lift-app-backend/)
+Frontend repo [at this link](https://github.com/rertyy/lift-app-frontend/) <br>
+Backend repo [at this link](https://github.com/rertyy/lift-app-backend/)
 
 Readme and more features to come (will be done when it's done)
 
@@ -21,7 +21,7 @@ The lift moves by a simple algorithm: it prioritises the direction it is moving 
 <br><br>
 
 **To be added:**
-* Formatting (to learn css!!!)
+* Formatting and styling
 * A visualiser for the current floor, whether doors are open, etc by css. 
 * Blocking to increase the time spent on floors with requests
 * Requests have a starting and ending floor
